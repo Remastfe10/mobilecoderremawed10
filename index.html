@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>remawed10 code mobile</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: JetBrains Mono & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        editorBg: '#0f172a',
+                        editorSidebar: '#1e293b',
+                        editorHeader: '#090d16',
+                        accent: '#38bdf8',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars for touch & performance */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        
+        /* Ensures line numbers align perfectly with textarea lines */
+        .editor-textarea, .line-numbers {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            letter-spacing: 0px;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        /* Scrolling frame & mobile zoom prevention */
+        textarea, input {
+            font-size: 16px !important;
+        }
+        @media (min-width: 768px) {
+            textarea, input {
+                font-size: 14px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-editorBg text-slate-200 h-screen w-screen flex flex-col overflow-hidden font-sans antialiased select-none">
+
+    <!-- Welcome & Tutorial Overlay Screen -->
+    <div id="modalOverlay" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
+        
+        <!-- STEP 1: Welcome Screen -->
+        <div id="stepWelcome" class="bg-slate-900 border border-slate-700/80 rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col items-center text-center space-y-5 animate-fade-in">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-extrabold text-2xl shadow-xl shadow-sky-500/30">
+                R10
+            </div>
+            
+            <div class="space-y-2">
+                <h2 class="text-xl sm:text-2xl font-bold text-white leading-tight">
+                    remawed 10 vuole portare il coding .html su mobile!
+                </h2>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Benvenuto nel tuo nuovo ambiente di sviluppo portatile! Abbiamo progettato questa applicazione per rendere la scrittura, la prova e lo sviluppo di codice HTML, CSS e JS sul tuo smartphone un'esperienza fluida, potente e senza vincoli.
+                </p>
+            </div>
+
+            <button onclick="goToAskTutorial()" class="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-sky-500/25 hover:opacity-95 transition active:scale-95 text-sm uppercase tracking-wider">
+                OK, Iniziamo!
+            </button>
+        </div>
+
+        <!-- STEP 2: Ask Tutorial Choice Screen -->
+        <div id="stepAskTutorial" class="hidden bg-slate-900 border border-slate-700/80 rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col items-center text-center space-y-5">
+            <div class="w-12 h-12 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl font-bold border border-sky-500/30">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            
+            <div class="space-y-2">
+                <h3 class="text-lg font-bold text-white">Vuoi fare prima un tutorial?</h3>
+                <p class="text-slate-400 text-xs sm:text-sm">
+                    Ti mostreremo brevemente come sfruttare al 100% tutte le funzionalità dell'editor mobile.
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row w-full gap-3">
+                <button onclick="startTutorial()" class="flex-1 py-3 bg-sky-500 text-white font-bold rounded-xl shadow-md hover:bg-sky-400 transition active:scale-95 text-xs sm:text-sm">
+                    Sì, mostra tutorial
+                </button>
+                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold rounded-xl border border-slate-700 transition active:scale-95 text-xs sm:text-sm">
+                    No, inizia a codificare
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Step-by-Step Tutorial Wizard Screen -->
+        <div id="stepTutorialWizard" class="hidden bg-slate-900 border border-slate-700/80 rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col justify-between min-h-[380px] space-y-4">
+            <!-- Header Step Badge -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span id="tutorialStepBadge" class="text-xs font-mono font-bold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-full">
+                    Passo 1 di 6
+                </span>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-sm p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Tutorial Slide Content -->
+            <div class="flex-1 flex flex-col items-center justify-center text-center space-y-3 py-2">
+                <div id="tutorialIcon" class="w-14 h-14 rounded-2xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center text-2xl shadow-inner">
+                    <!-- Icon populated dynamically -->
+                </div>
+                <h4 id="tutorialTitle" class="text-base font-bold text-white">
+                    <!-- Title populated dynamically -->
+                </h4>
+                <p id="tutorialDescription" class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                    <!-- Description populated dynamically -->
+                </p>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                <button id="tutorialPrevBtn" onclick="prevTutorialStep()" class="px-3 py-2 bg-slate-800 text-slate-300 font-medium rounded-lg text-xs hover:bg-slate-700 transition disabled:opacity-40 disabled:pointer-events-none">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Indietro
+                </button>
+                <button id="tutorialNextBtn" onclick="nextTutorialStep()" class="px-4 py-2 bg-sky-500 text-white font-bold rounded-lg text-xs hover:bg-sky-400 transition shadow-md active:scale-95">
+                    Avanti <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Top Fixed Header -->
+    <header class="h-14 bg-editorHeader border-b border-slate-800 flex items-center justify-between px-3 md:px-6 flex-shrink-0 z-30">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-sky-500/20">
+                R10
+            </div>
+            <div class="flex flex-col">
+                <h1 class="text-sm md:text-base font-bold text-white tracking-wide leading-none">remawed10 (beta)</h1>
+                <span class="text-[10px] text-sky-400 font-mono leading-tight">code mobile</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons Grouped Together in Top Bar -->
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+            <!-- View / Edit Toggle Button -->
+            <button id="toggleViewBtn" onclick="toggleView()" class="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 border border-sky-500/30 text-xs font-semibold transition active:scale-95">
+                <i id="toggleIcon" class="fa-solid fa-play text-[11px]"></i>
+                <span id="toggleText">Visualizza</span>
+            </button>
+
+            <!-- Auto-Save to LocalStorage Toggle (ON / OFF) -->
+            <button id="autoSaveBtn" onclick="toggleAutoSave()" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-semibold transition active:scale-95">
+                <i id="autoSaveIcon" class="fa-solid fa-floppy-disk text-[11px]"></i>
+                <span class="hidden xs:inline">Salva locale:</span>
+                <span id="autoSaveStatus" class="font-bold uppercase tracking-wider text-[10px] bg-emerald-500/30 px-1.5 py-0.5 rounded">ON</span>
+            </button>
+
+            <!-- Clear Editor Button -->
+            <button onclick="clearEditor()" class="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold transition active:scale-95">
+                <i class="fa-solid fa-trash-can text-[11px]"></i>
+                <span>Clear</span>
+            </button>
+
+            <!-- Download index.html Button -->
+            <button onclick="downloadCode()" class="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 border border-sky-500/30 text-xs font-semibold transition active:scale-95">
+                <i class="fa-solid fa-download text-[11px]"></i>
+                <span class="hidden sm:inline">Download</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 relative overflow-hidden flex flex-col">
+        
+        <!-- EDITOR SECTION -->
+        <div id="editorContainer" class="w-full h-full flex flex-col bg-editorBg overflow-hidden">
+            <!-- Horizontal & Vertical Scrolling Frame for Line Numbers + Infinite Code -->
+            <div id="scrollWrapper" class="flex-1 flex overflow-auto relative">
+                <!-- Line Numbers Column (Sticky on left) -->
+                <div id="lineNumbers" class="line-numbers sticky left-0 z-10 bg-editorSidebar text-slate-500 text-right pr-3 pl-2 py-3 select-none border-r border-slate-800 min-w-[40px] flex flex-col">
+                    1
+                </div>
+
+                <!-- Scrolling Frame Content Area (Horizontal & Vertical infinite expansion) -->
+                <div class="flex-1 relative min-w-max">
+                    <textarea id="codeEditor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
+                        class="editor-textarea min-w-[600px] w-full h-full bg-transparent text-slate-100 p-3 outline-none resize-none overflow-hidden block"
+                        placeholder="Scrivi il tuo codice HTML/CSS/JS qui..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- PREVIEW MODE SECTION (Hidden by default) -->
+        <div id="previewContainer" class="w-full h-full bg-white hidden flex-col">
+            <iframe id="previewFrame" class="w-full h-full border-0 bg-white"></iframe>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-4 py-2 rounded-full shadow-2xl border border-slate-700 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        Messaggio
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DOM Elements
+        const modalOverlay = document.getElementById('modalOverlay');
+        const stepWelcome = document.getElementById('stepWelcome');
+        const stepAskTutorial = document.getElementById('stepAskTutorial');
+        const stepTutorialWizard = document.getElementById('stepTutorialWizard');
+        const tutorialStepBadge = document.getElementById('tutorialStepBadge');
+        const tutorialIcon = document.getElementById('tutorialIcon');
+        const tutorialTitle = document.getElementById('tutorialTitle');
+        const tutorialDescription = document.getElementById('tutorialDescription');
+        const tutorialPrevBtn = document.getElementById('tutorialPrevBtn');
+        const tutorialNextBtn = document.getElementById('tutorialNextBtn');
+
+        const editorContainer = document.getElementById('editorContainer');
+        const previewContainer = document.getElementById('previewContainer');
+        const codeEditor = document.getElementById('codeEditor');
+        const lineNumbers = document.getElementById('lineNumbers');
+        const previewFrame = document.getElementById('previewFrame');
+        const toggleBtn = document.getElementById('toggleViewBtn');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const toggleText = document.getElementById('toggleText');
+        const autoSaveBtn = document.getElementById('autoSaveBtn');
+        const autoSaveStatus = document.getElementById('autoSaveStatus');
+        const toast = document.getElementById('toast');
+
+        let isPreviewMode = false;
+        let isAutoSaveOn = true;
+        let currentTutorialStep = 0;
+
+        const LOCAL_STORAGE_KEY = 'remawed10_saved_code';
+        const AUTO_SAVE_STATE_KEY = 'remawed10_autosave_state';
+
+        // Tutorial Steps Definition
+        const tutorialSteps = [
+            {
+                icon: 'fa-solid fa-arrows-up-down-left-right',
+                title: '1. Editor Illimitato & Scrolling Frame',
+                desc: 'Scrivi codice senza alcun limite di spazio. L\'editor supporta lo scorrimento sia verticale che orizzontale in un frame fluido, ideale per linee lunghe di codice su schermi mobile.'
+            },
+            {
+                icon: 'fa-solid fa-list-ol',
+                title: '2. Numeri di Riga Sincronizzati',
+                desc: 'I numeri delle righe sono sempre allineati perfettamente in tempo reale con quello che scrivi, facilitando l\'individuazione dei punti importanti nel tuo codice.'
+            },
+            {
+                icon: 'fa-solid fa-play',
+                title: '3. Tasto "Visualizza" (Live Preview)',
+                desc: 'Cliccando sul tasto "Visualizza" nella barra in alto, puoi testare istantaneamente il rendering del tuo HTML, CSS e JavaScript direttamente sul tuo telefono.'
+            },
+            {
+                icon: 'fa-solid fa-trash-can',
+                title: '4. Tasto "Clear"',
+                desc: 'Vuoi ricominciare da capo? Il pulsante "Clear" svuota immediatamente l\'editor cancellando il contenuto inserito.'
+            },
+            {
+                icon: 'fa-solid fa-download',
+                title: '5. Tasto "Download"',
+                desc: 'Con un semplice tocco sul pulsante "Download", viene scaricato un file index.html contenente il codice aggiornato scritto nell\'editor.'
+            },
+            {
+                icon: 'fa-solid fa-floppy-disk',
+                title: '6. Salva locale (ON / OFF)',
+                desc: 'Quando impostato su ON (Verde), l\'editor salva automaticamente il tuo lavoro nel browser. Se impostato su OFF, il salvataggio automatico viene disattivato per lasciarti lavorare in totale autonomia.'
+            }
+        ];
+
+        // Initialize Editor
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load AutoSave Preference
+            const savedAutoSavePref = localStorage.getItem(AUTO_SAVE_STATE_KEY);
+            if (savedAutoSavePref !== null) {
+                isAutoSaveOn = savedAutoSavePref === 'true';
+            }
+            updateAutoSaveUI();
+
+            // Load Saved Code if available and auto-save was active, otherwise start EMPTY
+            const savedCode = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (isAutoSaveOn && savedCode !== null) {
+                codeEditor.value = savedCode;
+            } else {
+                codeEditor.value = '';
+            }
+
+            updateEditorHeightAndLines();
+        });
+
+        // Modal Navigation Logic
+        function goToAskTutorial() {
+            stepWelcome.classList.add('hidden');
+            stepAskTutorial.classList.remove('hidden');
+        }
+
+        function startTutorial() {
+            stepAskTutorial.classList.add('hidden');
+            stepTutorialWizard.classList.remove('hidden');
+            currentTutorialStep = 0;
+            renderTutorialStep();
+        }
+
+        function renderTutorialStep() {
+            const step = tutorialSteps[currentTutorialStep];
+            tutorialStepBadge.innerText = `Passo ${currentTutorialStep + 1} di ${tutorialSteps.length}`;
+            tutorialIcon.innerHTML = `<i class="${step.icon}"></i>`;
+            tutorialTitle.innerText = step.title;
+            tutorialDescription.innerText = step.desc;
+
+            // Prev button state
+            tutorialPrevBtn.disabled = currentTutorialStep === 0;
+
+            // Next button text / action
+            if (currentTutorialStep === tutorialSteps.length - 1) {
+                tutorialNextBtn.innerHTML = 'Concludi <i class="fa-solid fa-check ml-1"></i>';
+            } else {
+                tutorialNextBtn.innerHTML = 'Avanti <i class="fa-solid fa-chevron-right ml-1"></i>';
+            }
+        }
+
+        function prevTutorialStep() {
+            if (currentTutorialStep > 0) {
+                currentTutorialStep--;
+                renderTutorialStep();
+            }
+        }
+
+        function nextTutorialStep() {
+            if (currentTutorialStep < tutorialSteps.length - 1) {
+                currentTutorialStep++;
+                renderTutorialStep();
+            } else {
+                closeModal();
+            }
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalOverlay.classList.add('hidden');
+            }, 300);
+        }
+
+        // Toggle Auto-Save ON / OFF
+        function toggleAutoSave() {
+            isAutoSaveOn = !isAutoSaveOn;
+            localStorage.setItem(AUTO_SAVE_STATE_KEY, isAutoSaveOn);
+            updateAutoSaveUI();
+
+            if (isAutoSaveOn) {
+                saveToLocalStorage();
+                showToast("Salvataggio locale: ON");
+            } else {
+                // Remove saved code from localStorage when turned OFF to prevent unwanted persistence
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+                showToast("Salvataggio locale: OFF");
+            }
+        }
+
+        // Update AutoSave Toggle Button appearance
+        function updateAutoSaveUI() {
+            if (isAutoSaveOn) {
+                autoSaveStatus.innerText = 'ON';
+                autoSaveBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-semibold transition active:scale-95";
+                autoSaveStatus.className = "font-bold uppercase tracking-wider text-[10px] bg-emerald-500/30 px-1.5 py-0.5 rounded text-emerald-300";
+            } else {
+                autoSaveStatus.innerText = 'OFF';
+                autoSaveBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-xs font-semibold transition active:scale-95";
+                autoSaveStatus.className = "font-bold uppercase tracking-wider text-[10px] bg-slate-700/60 px-1.5 py-0.5 rounded text-slate-400";
+            }
+        }
+
+        // Save current code to localStorage ONLY if isAutoSaveOn is explicitly true
+        function saveToLocalStorage() {
+            if (isAutoSaveOn === true) {
+                localStorage.setItem(LOCAL_STORAGE_KEY, codeEditor.value);
+            }
+        }
+
+        // Dynamic Line Numbers & Infinite Auto-Height Expansion
+        function updateEditorHeightAndLines() {
+            const lines = codeEditor.value.split('\n');
+            const lineCount = lines.length;
+
+            // Generate Line Numbers
+            let lineNumsHTML = '';
+            for (let i = 1; i <= lineCount; i++) {
+                lineNumsHTML += i + '<br>';
+            }
+            lineNumbers.innerHTML = lineNumsHTML;
+
+            // Auto-expand textarea height to fit content without scroll limits
+            codeEditor.style.height = 'auto';
+            const scrollHeight = codeEditor.scrollHeight;
+            codeEditor.style.height = Math.max(scrollHeight, 400) + 'px';
+        }
+
+        // Handle Text Input, Auto-Resizing & Auto-Save
+        codeEditor.addEventListener('input', () => {
+            updateEditorHeightAndLines();
+            if (isAutoSaveOn) {
+                saveToLocalStorage();
+            }
+        });
+
+        // Synchronize Tab key inside Textarea
+        codeEditor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+
+                // Insert 2 spaces for tab
+                this.value = this.value.substring(0, start) + "  " + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 2;
+
+                updateEditorHeightAndLines();
+                if (isAutoSaveOn) {
+                    saveToLocalStorage();
+                }
+            }
+        });
+
+        // Toggle Preview / Editor Mode
+        function toggleView() {
+            if (!isPreviewMode) {
+                // Switch to Preview
+                const code = codeEditor.value;
+                const iframeDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                
+                iframeDoc.open();
+                iframeDoc.write(code);
+                iframeDoc.close();
+
+                editorContainer.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+
+                toggleIcon.className = "fa-solid fa-code text-[11px]";
+                toggleText.innerText = "Codice";
+                toggleBtn.classList.remove('bg-sky-500/10', 'text-sky-400', 'border-sky-500/30');
+                toggleBtn.classList.add('bg-amber-500/10', 'text-amber-400', 'border-amber-500/30');
+                
+                showToast("Modalità Visualizzazione attiva");
+            } else {
+                // Switch back to Editor
+                previewContainer.classList.add('hidden');
+                previewContainer.classList.remove('flex');
+                editorContainer.classList.remove('hidden');
+
+                toggleIcon.className = "fa-solid fa-play text-[11px]";
+                toggleText.innerText = "Visualizza";
+                toggleBtn.classList.remove('bg-amber-500/10', 'text-amber-400', 'border-amber-500/30');
+                toggleBtn.classList.add('bg-sky-500/10', 'text-sky-400', 'border-sky-500/30');
+
+                showToast("Tornato all'Editor");
+            }
+            isPreviewMode = !isPreviewMode;
+        }
+
+        // Download index.html File
+        function downloadCode() {
+            const code = codeEditor.value;
+            const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            
+            link.href = URL.createObjectURL(blob);
+            link.download = 'index.html';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+
+            showToast("index.html scaricato con successo!");
+        }
+
+        // Clear Editor Content
+        function clearEditor() {
+            if (codeEditor.value.trim() === '') return;
+            codeEditor.value = '';
+            updateEditorHeightAndLines();
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+            showToast("Codice cancellato");
+        }
+
+        // Show Toast Notification
+        function showToast(msg) {
+            toast.innerText = msg;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
