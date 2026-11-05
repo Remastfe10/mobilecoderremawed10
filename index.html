@@ -1,521 +1,1010 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>remawed10 code mobile</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: JetBrains Mono & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        editorBg: '#0f172a',
-                        editorSidebar: '#1e293b',
-                        editorHeader: '#090d16',
-                        accent: '#38bdf8',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom scrollbars for touch & performance */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 3px;
-        }
-        
-        /* Ensures line numbers align perfectly with textarea lines */
-        .editor-textarea, .line-numbers {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            letter-spacing: 0px;
-            white-space: pre;
-            tab-size: 4;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REMAWED10 HUB</title>
 
-        /* Scrolling frame & mobile zoom prevention */
-        textarea, input {
-            font-size: 16px !important;
-        }
-        @media (min-width: 768px) {
-            textarea, input {
-                font-size: 14px !important;
-            }
-        }
-    </style>
+<!-- Favicon -->
+<link rel="icon" href="1.jpg" type="image/jpeg">
+<link rel="shortcut icon" href="1.jpg" type="image/jpeg">
+<link rel="apple-touch-icon" href="1.jpg">
+
+<!-- Google Fonts Gaming -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #03050a;
+  --card-bg: rgba(10, 15, 29, 0.85);
+  --text: #f0f6ff;
+  --muted: #62748e;
+  --primary: #00f0ff;
+  --primary-glow: rgba(0, 240, 255, 0.4);
+  --secondary: #7000ff;
+  --accent: #ff0055;
+  --border: rgba(0, 240, 255, 0.25);
+  --active-color: #00ff66;
+}
+
+* { box-sizing: border-box; }
+
+body { 
+  margin: 0; 
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg) url('2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: var(--text); 
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background Canvas & Grid Overlay */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: 
+    linear-gradient(rgba(3, 5, 10, 0.88), rgba(3, 5, 10, 0.95)),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px) 0 0 / 50px 50px,
+    linear-gradient(0deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px) 0 0 / 50px 50px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.container { width: min(1200px, 92%); margin: auto; }
+
+header { padding: 45px 0 25px; text-align: center; position: relative; }
+
+/* Logo Principale */
+.top-logo {
+  width: 210px;
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto 20px;
+  display: block;
+  border-radius: 18px;
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 30px var(--primary-glow), inset 0 0 15px var(--primary-glow);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  object-fit: contain;
+}
+
+.top-logo:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 0 45px rgba(0, 240, 255, 0.8);
+}
+
+/* Pulsante Roblox Gaming Cyber */
+.btn-roblox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 10px auto 25px;
+  padding: 16px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0052d4, #4364f7, #00f0ff);
+  background-size: 200% 200%;
+  animation: gradientMove 4s ease infinite;
+  text-decoration: none;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 25px rgba(67, 100, 247, 0.6);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.btn-roblox:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.8);
+}
+
+.btn-roblox .hand-icon {
+  font-size: 22px;
+  animation: pulseIcon 1.5s infinite alternate;
+}
+
+@keyframes pulseIcon {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.3); filter: drop-shadow(0 0 8px #00f0ff); }
+}
+
+/* Badge HUD */
+.badge { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 8px 22px; 
+  background: rgba(10, 16, 30, 0.85); 
+  color: var(--primary); 
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700; 
+  font-size: 13px;
+  letter-spacing: 1px;
+  backdrop-filter: blur(10px); 
+  border: 1px solid var(--border);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.badge-img { height: 26px; width: auto; border-radius: 4px; object-fit: contain; }
+
+h1 { 
+  margin: 18px 0 8px; 
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(34px, 5.5vw, 62px); 
+  font-weight: 900;
+  letter-spacing: 2px; 
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 30%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 35px var(--primary-glow);
+}
+
+.subtitle { 
+  margin: 0 auto; 
+  max-width: 720px; 
+  color: var(--muted); 
+  font-size: 18px; 
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.subtitle b { color: var(--primary); }
+
+/* Control Panel / Toolbar */
+.control-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 30px 0 25px;
+  background: rgba(10, 15, 29, 0.85);
+  padding: 12px 20px;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  flex-wrap: wrap;
+}
+
+.search-box { flex: 1; min-width: 250px; }
+
+#search { 
+  width: 100%;
+  padding: 12px 18px; 
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(5, 8, 16, 0.9);
+  color: var(--text); 
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 18px; 
+  font-weight: 700;
+  outline: none; 
+  transition: all 0.3s ease;
+}
+#search::placeholder { color: #47586e; }
+#search:focus { 
+  border-color: var(--primary); 
+  box-shadow: 0 0 15px var(--primary-glow); 
+}
+
+/* Counter HUD Slot Attivi Disattivabile */
+.active-counter {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--active-color);
+  background: rgba(0, 255, 102, 0.08);
+  border: 1px solid rgba(0, 255, 102, 0.3);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1px;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.15);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.active-counter.disabled {
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.active-counter .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--active-color);
+  box-shadow: 0 0 8px var(--active-color);
+  animation: blink 1.2s infinite alternate;
+}
+.active-counter.disabled .status-dot {
+  background: var(--muted);
+  box-shadow: none;
+  animation: none;
+}
+
+/* Grid & Cards (Slots) */
+.grid { 
+  display: grid; 
+  grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  gap: 16px; 
+  padding-bottom: 60px; 
+}
+
+.slot { 
+  display: flex; 
+  align-items: center; 
+  gap: 14px; 
+  background: var(--card-bg);
+  border: 1px solid var(--border); 
+  padding: 14px 18px;
+  backdrop-filter: blur(12px); 
+  position: relative;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.slot:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+.slot.is-active { border-left: 4px solid var(--active-color); }
+.slot.is-empty { border-left: 4px solid #334155; opacity: 0.75; }
+
+.slot-number { 
+  width: 42px; 
+  height: 42px; 
+  display: grid; 
+  place-items: center;
+  background: rgba(0, 240, 255, 0.08); 
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--primary); 
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900; 
+  font-size: 15px;
+  flex: none; 
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.slot-content { min-width: 0; flex: 1; display: grid; gap: 3px; }
+
+.slot-content input { 
+  width: 100%; 
+  border: 0; 
+  outline: 0; 
+  background: transparent; 
+  color: var(--text); 
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+}
+
+.slot-title { 
+  font-weight: 700; 
+  font-size: 17px; 
+  letter-spacing: 0.5px;
+  color: #ffffff; 
+}
+
+.slot-url { 
+  color: var(--muted); 
+  font-size: 14px; 
+  font-weight: 600;
+}
+
+.go { 
+  border: 0; 
+  background: linear-gradient(135deg, var(--primary), #0088ff); 
+  color: #030712; 
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900; 
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 12px 18px;
+  cursor: pointer; 
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+  transition: all 0.2s ease;
+  flex: none;
+}
+
+.go:hover { 
+  background: linear-gradient(135deg, #00f0ff, var(--secondary));
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(112, 0, 255, 0.8);
+  transform: scale(1.05);
+}
+
+footer { 
+  text-align: center; 
+  color: var(--muted); 
+  padding: 0 0 40px; 
+  font-size: 14px; 
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+@media (max-width: 768px) { 
+  .grid { grid-template-columns: 1fr; } 
+  h1 { font-size: 32px; }
+  .control-panel { flex-direction: column; align-items: stretch; }
+  .btn-roblox { font-size: 14px; padding: 14px 20px; }
+}
+</style>
 </head>
-<body class="bg-editorBg text-slate-200 h-screen w-screen flex flex-col overflow-hidden font-sans antialiased select-none">
+<body>
 
-    <!-- Welcome & Tutorial Overlay Screen -->
-    <div id="modalOverlay" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
-        
-        <!-- STEP 1: Welcome Screen -->
-        <div id="stepWelcome" class="bg-slate-900 border border-slate-700/80 rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col items-center text-center space-y-5 animate-fade-in">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-extrabold text-2xl shadow-xl shadow-sky-500/30">
-                R10
-            </div>
-            
-            <div class="space-y-2">
-                <h2 class="text-xl sm:text-2xl font-bold text-white leading-tight">
-                    remawed 10 vuole portare il coding .html su mobile!
-                </h2>
-                <p class="text-slate-300 text-sm leading-relaxed">
-                    Benvenuto nel tuo nuovo ambiente di sviluppo portatile! Abbiamo progettato questa applicazione per rendere la scrittura, la prova e lo sviluppo di codice HTML, CSS e JS sul tuo smartphone un'esperienza fluida, potente e senza vincoli.
-                </p>
-            </div>
+<canvas id="bg-canvas"></canvas>
 
-            <button onclick="goToAskTutorial()" class="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-sky-500/25 hover:opacity-95 transition active:scale-95 text-sm uppercase tracking-wider">
-                OK, Iniziamo!
-            </button>
-        </div>
+<header class="container">
+  <img src="1.jpg" alt="Logo Principale" class="top-logo">
+  
+  <a href="roblox.html" class="btn-roblox">
+    <span class="hand-icon">🎮</span> VISITA I PROGRESSI DI ROBLOX
+  </a>
 
-        <!-- STEP 2: Ask Tutorial Choice Screen -->
-        <div id="stepAskTutorial" class="hidden bg-slate-900 border border-slate-700/80 rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col items-center text-center space-y-5">
-            <div class="w-12 h-12 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl font-bold border border-sky-500/30">
-                <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            
-            <div class="space-y-2">
-                <h3 class="text-lg font-bold text-white">Vuoi fare prima un tutorial?</h3>
-                <p class="text-slate-400 text-xs sm:text-sm">
-                    Ti mostreremo brevemente come sfruttare al 100% tutte le funzionalità dell'editor mobile.
-                </p>
-            </div>
+  <div>
+    <span class="badge"><img src="1.jpg" alt="Logo" class="badge-img"> 50 SLOTS • GAMING HUB</span>
+  </div>
+  <h1 id="mainTitle">REMAWED10 HUB</h1>
+  <p class="subtitle">TUTTI I SITI DI QUESTO HUB. <b>VAI A VISITARLI! ↗️</b> (premi VAI per aprire il sito.)</p>
+</header>
 
-            <div class="flex flex-col sm:flex-row w-full gap-3">
-                <button onclick="startTutorial()" class="flex-1 py-3 bg-sky-500 text-white font-bold rounded-xl shadow-md hover:bg-sky-400 transition active:scale-95 text-xs sm:text-sm">
-                    Sì, mostra tutorial
-                </button>
-                <button onclick="closeModal()" class="flex-1 py-3 bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold rounded-xl border border-slate-700 transition active:scale-95 text-xs sm:text-sm">
-                    No, inizia a codificare
-                </button>
-            </div>
-        </div>
-
-        <!-- STEP 3: Step-by-Step Tutorial Wizard Screen -->
-        <div id="stepTutorialWizard" class="hidden bg-slate-900 border border-slate-700/80 rounded-2xl p-6 max-w-md w-full shadow-2xl flex flex-col justify-between min-h-[380px] space-y-4">
-            <!-- Header Step Badge -->
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span id="tutorialStepBadge" class="text-xs font-mono font-bold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-full">
-                    Passo 1 di 6
-                </span>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-sm p-1">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <!-- Tutorial Slide Content -->
-            <div class="flex-1 flex flex-col items-center justify-center text-center space-y-3 py-2">
-                <div id="tutorialIcon" class="w-14 h-14 rounded-2xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center text-2xl shadow-inner">
-                    <!-- Icon populated dynamically -->
-                </div>
-                <h4 id="tutorialTitle" class="text-base font-bold text-white">
-                    <!-- Title populated dynamically -->
-                </h4>
-                <p id="tutorialDescription" class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                    <!-- Description populated dynamically -->
-                </p>
-            </div>
-
-            <!-- Navigation Controls -->
-            <div class="flex items-center justify-between pt-3 border-t border-slate-800">
-                <button id="tutorialPrevBtn" onclick="prevTutorialStep()" class="px-3 py-2 bg-slate-800 text-slate-300 font-medium rounded-lg text-xs hover:bg-slate-700 transition disabled:opacity-40 disabled:pointer-events-none">
-                    <i class="fa-solid fa-chevron-left mr-1"></i> Indietro
-                </button>
-                <button id="tutorialNextBtn" onclick="nextTutorialStep()" class="px-4 py-2 bg-sky-500 text-white font-bold rounded-lg text-xs hover:bg-sky-400 transition shadow-md active:scale-95">
-                    Avanti <i class="fa-solid fa-chevron-right ml-1"></i>
-                </button>
-            </div>
-        </div>
-
+<main class="container">
+  <div class="control-panel">
+    <div class="search-box">
+      <input id="search" type="search" placeholder="🔍 Cerca tra i 50 siti...">
     </div>
-
-    <!-- Top Fixed Header -->
-    <header class="h-14 bg-editorHeader border-b border-slate-800 flex items-center justify-between px-3 md:px-6 flex-shrink-0 z-30">
-        <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-sky-500/20">
-                R10
-            </div>
-            <div class="flex flex-col">
-                <h1 class="text-sm md:text-base font-bold text-white tracking-wide leading-none">remawed10 (beta)</h1>
-                <span class="text-[10px] text-sky-400 font-mono leading-tight">code mobile</span>
-            </div>
-        </div>
-
-        <!-- Action Buttons Grouped Together in Top Bar -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <!-- View / Edit Toggle Button -->
-            <button id="toggleViewBtn" onclick="toggleView()" class="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 border border-sky-500/30 text-xs font-semibold transition active:scale-95">
-                <i id="toggleIcon" class="fa-solid fa-play text-[11px]"></i>
-                <span id="toggleText">Visualizza</span>
-            </button>
-
-            <!-- Auto-Save to LocalStorage Toggle (ON / OFF) -->
-            <button id="autoSaveBtn" onclick="toggleAutoSave()" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-semibold transition active:scale-95">
-                <i id="autoSaveIcon" class="fa-solid fa-floppy-disk text-[11px]"></i>
-                <span class="hidden xs:inline">Salva locale:</span>
-                <span id="autoSaveStatus" class="font-bold uppercase tracking-wider text-[10px] bg-emerald-500/30 px-1.5 py-0.5 rounded">ON</span>
-            </button>
-
-            <!-- Clear Editor Button -->
-            <button onclick="clearEditor()" class="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold transition active:scale-95">
-                <i class="fa-solid fa-trash-can text-[11px]"></i>
-                <span>Clear</span>
-            </button>
-
-            <!-- Download index.html Button -->
-            <button onclick="downloadCode()" class="flex items-center space-x-1 px-2 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 border border-sky-500/30 text-xs font-semibold transition active:scale-95">
-                <i class="fa-solid fa-download text-[11px]"></i>
-                <span class="hidden sm:inline">Download</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Workspace Container -->
-    <main class="flex-1 relative overflow-hidden flex flex-col">
-        
-        <!-- EDITOR SECTION -->
-        <div id="editorContainer" class="w-full h-full flex flex-col bg-editorBg overflow-hidden">
-            <!-- Horizontal & Vertical Scrolling Frame for Line Numbers + Infinite Code -->
-            <div id="scrollWrapper" class="flex-1 flex overflow-auto relative">
-                <!-- Line Numbers Column (Sticky on left) -->
-                <div id="lineNumbers" class="line-numbers sticky left-0 z-10 bg-editorSidebar text-slate-500 text-right pr-3 pl-2 py-3 select-none border-r border-slate-800 min-w-[40px] flex flex-col">
-                    1
-                </div>
-
-                <!-- Scrolling Frame Content Area (Horizontal & Vertical infinite expansion) -->
-                <div class="flex-1 relative min-w-max">
-                    <textarea id="codeEditor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" 
-                        class="editor-textarea min-w-[600px] w-full h-full bg-transparent text-slate-100 p-3 outline-none resize-none overflow-hidden block"
-                        placeholder="Scrivi il tuo codice HTML/CSS/JS qui..."></textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- PREVIEW MODE SECTION (Hidden by default) -->
-        <div id="previewContainer" class="w-full h-full bg-white hidden flex-col">
-            <iframe id="previewFrame" class="w-full h-full border-0 bg-white"></iframe>
-        </div>
-
-    </main>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-4 py-2 rounded-full shadow-2xl border border-slate-700 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
-        Messaggio
+    
+    <div class="active-counter" id="activeCounterBtn" title="Clicca per disattivare/attivare il conteggio">
+      <span class="status-dot"></span>
+      <span id="activeCountDisplay">ATTIVI: 0 / 50</span>
     </div>
+  </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // DOM Elements
-        const modalOverlay = document.getElementById('modalOverlay');
-        const stepWelcome = document.getElementById('stepWelcome');
-        const stepAskTutorial = document.getElementById('stepAskTutorial');
-        const stepTutorialWizard = document.getElementById('stepTutorialWizard');
-        const tutorialStepBadge = document.getElementById('tutorialStepBadge');
-        const tutorialIcon = document.getElementById('tutorialIcon');
-        const tutorialTitle = document.getElementById('tutorialTitle');
-        const tutorialDescription = document.getElementById('tutorialDescription');
-        const tutorialPrevBtn = document.getElementById('tutorialPrevBtn');
-        const tutorialNextBtn = document.getElementById('tutorialNextBtn');
+  <section class="grid" id="grid">
 
-        const editorContainer = document.getElementById('editorContainer');
-        const previewContainer = document.getElementById('previewContainer');
-        const codeEditor = document.getElementById('codeEditor');
-        const lineNumbers = document.getElementById('lineNumbers');
-        const previewFrame = document.getElementById('previewFrame');
-        const toggleBtn = document.getElementById('toggleViewBtn');
-        const toggleIcon = document.getElementById('toggleIcon');
-        const toggleText = document.getElementById('toggleText');
-        const autoSaveBtn = document.getElementById('autoSaveBtn');
-        const autoSaveStatus = document.getElementById('autoSaveStatus');
-        const toast = document.getElementById('toast');
+    <article class="slot">
+      <div class="slot-number">1</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 1" aria-label="Titolo sito 1" value="remawed10 food menu editor" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 1" value="https://remastfe10.github.io/remawed10menueditor/" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        let isPreviewMode = false;
-        let isAutoSaveOn = true;
-        let currentTutorialStep = 0;
+    <article class="slot">
+      <div class="slot-number">2</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 2" aria-label="Titolo sito 2" value="SCARICA PROGRAMMI WINDOWS DI QUESTO HUB" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 2" value="https://remastfe10.github.io/REMAWED10-DOWNLOAD-WINDOWS/" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        const LOCAL_STORAGE_KEY = 'remawed10_saved_code';
-        const AUTO_SAVE_STATE_KEY = 'remawed10_autosave_state';
+     <article class="slot">
+      <div class="slot-number">3</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 2" aria-label="Titolo sito 2" value="REMAWED10 MOBILE .HTML CODER" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 2" value="https://remastfe10.github.io/mobilecoderremawed10/" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Tutorial Steps Definition
-        const tutorialSteps = [
-            {
-                icon: 'fa-solid fa-arrows-up-down-left-right',
-                title: '1. Editor Illimitato & Scrolling Frame',
-                desc: 'Scrivi codice senza alcun limite di spazio. L\'editor supporta lo scorrimento sia verticale che orizzontale in un frame fluido, ideale per linee lunghe di codice su schermi mobile.'
-            },
-            {
-                icon: 'fa-solid fa-list-ol',
-                title: '2. Numeri di Riga Sincronizzati',
-                desc: 'I numeri delle righe sono sempre allineati perfettamente in tempo reale con quello che scrivi, facilitando l\'individuazione dei punti importanti nel tuo codice.'
-            },
-            {
-                icon: 'fa-solid fa-play',
-                title: '3. Tasto "Visualizza" (Live Preview)',
-                desc: 'Cliccando sul tasto "Visualizza" nella barra in alto, puoi testare istantaneamente il rendering del tuo HTML, CSS e JavaScript direttamente sul tuo telefono.'
-            },
-            {
-                icon: 'fa-solid fa-trash-can',
-                title: '4. Tasto "Clear"',
-                desc: 'Vuoi ricominciare da capo? Il pulsante "Clear" svuota immediatamente l\'editor cancellando il contenuto inserito.'
-            },
-            {
-                icon: 'fa-solid fa-download',
-                title: '5. Tasto "Download"',
-                desc: 'Con un semplice tocco sul pulsante "Download", viene scaricato un file index.html contenente il codice aggiornato scritto nell\'editor.'
-            },
-            {
-                icon: 'fa-solid fa-floppy-disk',
-                title: '6. Salva locale (ON / OFF)',
-                desc: 'Quando impostato su ON (Verde), l\'editor salva automaticamente il tuo lavoro nel browser. Se impostato su OFF, il salvataggio automatico viene disattivato per lasciarti lavorare in totale autonomia.'
-            }
-        ];
 
-        // Initialize Editor
-        window.addEventListener('DOMContentLoaded', () => {
-            // Load AutoSave Preference
-            const savedAutoSavePref = localStorage.getItem(AUTO_SAVE_STATE_KEY);
-            if (savedAutoSavePref !== null) {
-                isAutoSaveOn = savedAutoSavePref === 'true';
-            }
-            updateAutoSaveUI();
+    <article class="slot">
+      <div class="slot-number">4</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 4" aria-label="Titolo sito 4" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 4" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            // Load Saved Code if available and auto-save was active, otherwise start EMPTY
-            const savedCode = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if (isAutoSaveOn && savedCode !== null) {
-                codeEditor.value = savedCode;
-            } else {
-                codeEditor.value = '';
-            }
+    <article class="slot">
+      <div class="slot-number">5</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 5" aria-label="Titolo sito 5" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 5" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            updateEditorHeightAndLines();
-        });
+    <article class="slot">
+      <div class="slot-number">6</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 6" aria-label="Titolo sito 6" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 6" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Modal Navigation Logic
-        function goToAskTutorial() {
-            stepWelcome.classList.add('hidden');
-            stepAskTutorial.classList.remove('hidden');
-        }
+    <article class="slot">
+      <div class="slot-number">7</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 7" aria-label="Titolo sito 7" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 7" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        function startTutorial() {
-            stepAskTutorial.classList.add('hidden');
-            stepTutorialWizard.classList.remove('hidden');
-            currentTutorialStep = 0;
-            renderTutorialStep();
-        }
+    <article class="slot">
+      <div class="slot-number">8</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 8" aria-label="Titolo sito 8" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 8" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        function renderTutorialStep() {
-            const step = tutorialSteps[currentTutorialStep];
-            tutorialStepBadge.innerText = `Passo ${currentTutorialStep + 1} di ${tutorialSteps.length}`;
-            tutorialIcon.innerHTML = `<i class="${step.icon}"></i>`;
-            tutorialTitle.innerText = step.title;
-            tutorialDescription.innerText = step.desc;
+    <article class="slot">
+      <div class="slot-number">9</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 9" aria-label="Titolo sito 9" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 9" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            // Prev button state
-            tutorialPrevBtn.disabled = currentTutorialStep === 0;
+    <article class="slot">
+      <div class="slot-number">10</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 10" aria-label="Titolo sito 10" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 10" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            // Next button text / action
-            if (currentTutorialStep === tutorialSteps.length - 1) {
-                tutorialNextBtn.innerHTML = 'Concludi <i class="fa-solid fa-check ml-1"></i>';
-            } else {
-                tutorialNextBtn.innerHTML = 'Avanti <i class="fa-solid fa-chevron-right ml-1"></i>';
-            }
-        }
+    <article class="slot">
+      <div class="slot-number">11</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 11" aria-label="Titolo sito 11" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 11" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        function prevTutorialStep() {
-            if (currentTutorialStep > 0) {
-                currentTutorialStep--;
-                renderTutorialStep();
-            }
-        }
+    <article class="slot">
+      <div class="slot-number">12</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 12" aria-label="Titolo sito 12" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 12" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        function nextTutorialStep() {
-            if (currentTutorialStep < tutorialSteps.length - 1) {
-                currentTutorialStep++;
-                renderTutorialStep();
-            } else {
-                closeModal();
-            }
-        }
+    <article class="slot">
+      <div class="slot-number">13</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 13" aria-label="Titolo sito 13" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 13" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        function closeModal() {
-            modalOverlay.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                modalOverlay.classList.add('hidden');
-            }, 300);
-        }
+    <article class="slot">
+      <div class="slot-number">14</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 14" aria-label="Titolo sito 14" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 14" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Toggle Auto-Save ON / OFF
-        function toggleAutoSave() {
-            isAutoSaveOn = !isAutoSaveOn;
-            localStorage.setItem(AUTO_SAVE_STATE_KEY, isAutoSaveOn);
-            updateAutoSaveUI();
+    <article class="slot">
+      <div class="slot-number">15</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 15" aria-label="Titolo sito 15" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 15" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            if (isAutoSaveOn) {
-                saveToLocalStorage();
-                showToast("Salvataggio locale: ON");
-            } else {
-                // Remove saved code from localStorage when turned OFF to prevent unwanted persistence
-                localStorage.removeItem(LOCAL_STORAGE_KEY);
-                showToast("Salvataggio locale: OFF");
-            }
-        }
+    <article class="slot">
+      <div class="slot-number">16</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 16" aria-label="Titolo sito 16" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 16" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Update AutoSave Toggle Button appearance
-        function updateAutoSaveUI() {
-            if (isAutoSaveOn) {
-                autoSaveStatus.innerText = 'ON';
-                autoSaveBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-semibold transition active:scale-95";
-                autoSaveStatus.className = "font-bold uppercase tracking-wider text-[10px] bg-emerald-500/30 px-1.5 py-0.5 rounded text-emerald-300";
-            } else {
-                autoSaveStatus.innerText = 'OFF';
-                autoSaveBtn.className = "flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 text-xs font-semibold transition active:scale-95";
-                autoSaveStatus.className = "font-bold uppercase tracking-wider text-[10px] bg-slate-700/60 px-1.5 py-0.5 rounded text-slate-400";
-            }
-        }
+    <article class="slot">
+      <div class="slot-number">17</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 17" aria-label="Titolo sito 17" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 17" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Save current code to localStorage ONLY if isAutoSaveOn is explicitly true
-        function saveToLocalStorage() {
-            if (isAutoSaveOn === true) {
-                localStorage.setItem(LOCAL_STORAGE_KEY, codeEditor.value);
-            }
-        }
+    <article class="slot">
+      <div class="slot-number">18</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 18" aria-label="Titolo sito 18" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 18" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Dynamic Line Numbers & Infinite Auto-Height Expansion
-        function updateEditorHeightAndLines() {
-            const lines = codeEditor.value.split('\n');
-            const lineCount = lines.length;
+    <article class="slot">
+      <div class="slot-number">19</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 19" aria-label="Titolo sito 19" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 19" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            // Generate Line Numbers
-            let lineNumsHTML = '';
-            for (let i = 1; i <= lineCount; i++) {
-                lineNumsHTML += i + '<br>';
-            }
-            lineNumbers.innerHTML = lineNumsHTML;
+    <article class="slot">
+      <div class="slot-number">20</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 20" aria-label="Titolo sito 20" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 20" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            // Auto-expand textarea height to fit content without scroll limits
-            codeEditor.style.height = 'auto';
-            const scrollHeight = codeEditor.scrollHeight;
-            codeEditor.style.height = Math.max(scrollHeight, 400) + 'px';
-        }
+    <article class="slot">
+      <div class="slot-number">21</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 21" aria-label="Titolo sito 21" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 21" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Handle Text Input, Auto-Resizing & Auto-Save
-        codeEditor.addEventListener('input', () => {
-            updateEditorHeightAndLines();
-            if (isAutoSaveOn) {
-                saveToLocalStorage();
-            }
-        });
+    <article class="slot">
+      <div class="slot-number">22</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 22" aria-label="Titolo sito 22" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 22" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Synchronize Tab key inside Textarea
-        codeEditor.addEventListener('keydown', function(e) {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
+    <article class="slot">
+      <div class="slot-number">23</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 23" aria-label="Titolo sito 23" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 23" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-                // Insert 2 spaces for tab
-                this.value = this.value.substring(0, start) + "  " + this.value.substring(end);
-                this.selectionStart = this.selectionEnd = start + 2;
+    <article class="slot">
+      <div class="slot-number">24</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 24" aria-label="Titolo sito 24" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 24" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-                updateEditorHeightAndLines();
-                if (isAutoSaveOn) {
-                    saveToLocalStorage();
-                }
-            }
-        });
+    <article class="slot">
+      <div class="slot-number">25</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 25" aria-label="Titolo sito 25" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 25" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Toggle Preview / Editor Mode
-        function toggleView() {
-            if (!isPreviewMode) {
-                // Switch to Preview
-                const code = codeEditor.value;
-                const iframeDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-                
-                iframeDoc.open();
-                iframeDoc.write(code);
-                iframeDoc.close();
+    <article class="slot">
+      <div class="slot-number">26</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 26" aria-label="Titolo sito 26" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 26" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-                editorContainer.classList.add('hidden');
-                previewContainer.classList.remove('hidden');
-                previewContainer.classList.add('flex');
+    <article class="slot">
+      <div class="slot-number">27</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 27" aria-label="Titolo sito 27" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 27" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-                toggleIcon.className = "fa-solid fa-code text-[11px]";
-                toggleText.innerText = "Codice";
-                toggleBtn.classList.remove('bg-sky-500/10', 'text-sky-400', 'border-sky-500/30');
-                toggleBtn.classList.add('bg-amber-500/10', 'text-amber-400', 'border-amber-500/30');
-                
-                showToast("Modalità Visualizzazione attiva");
-            } else {
-                // Switch back to Editor
-                previewContainer.classList.add('hidden');
-                previewContainer.classList.remove('flex');
-                editorContainer.classList.remove('hidden');
+    <article class="slot">
+      <div class="slot-number">28</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 28" aria-label="Titolo sito 28" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 28" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-                toggleIcon.className = "fa-solid fa-play text-[11px]";
-                toggleText.innerText = "Visualizza";
-                toggleBtn.classList.remove('bg-amber-500/10', 'text-amber-400', 'border-amber-500/30');
-                toggleBtn.classList.add('bg-sky-500/10', 'text-sky-400', 'border-sky-500/30');
+    <article class="slot">
+      <div class="slot-number">29</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 29" aria-label="Titolo sito 29" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 29" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-                showToast("Tornato all'Editor");
-            }
-            isPreviewMode = !isPreviewMode;
-        }
+    <article class="slot">
+      <div class="slot-number">30</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 30" aria-label="Titolo sito 30" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 30" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Download index.html File
-        function downloadCode() {
-            const code = codeEditor.value;
-            const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
-            const link = document.createElement('a');
-            
-            link.href = URL.createObjectURL(blob);
-            link.download = 'index.html';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(link.href);
+    <article class="slot">
+      <div class="slot-number">31</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 31" aria-label="Titolo sito 31" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 31" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-            showToast("index.html scaricato con successo!");
-        }
+    <article class="slot">
+      <div class="slot-number">32</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 32" aria-label="Titolo sito 32" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 32" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Clear Editor Content
-        function clearEditor() {
-            if (codeEditor.value.trim() === '') return;
-            codeEditor.value = '';
-            updateEditorHeightAndLines();
-            localStorage.removeItem(LOCAL_STORAGE_KEY);
-            showToast("Codice cancellato");
-        }
+    <article class="slot">
+      <div class="slot-number">33</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 33" aria-label="Titolo sito 33" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 33" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
 
-        // Show Toast Notification
-        function showToast(msg) {
-            toast.innerText = msg;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2000);
-        }
-    </script>
+    <article class="slot">
+      <div class="slot-number">34</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 34" aria-label="Titolo sito 34" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 34" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">35</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 35" aria-label="Titolo sito 35" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 35" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">36</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 36" aria-label="Titolo sito 36" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 36" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">37</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 37" aria-label="Titolo sito 37" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 37" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">38</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 38" aria-label="Titolo sito 38" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 38" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">39</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 39" aria-label="Titolo sito 39" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 39" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">40</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 40" aria-label="Titolo sito 40" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 40" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">41</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 41" aria-label="Titolo sito 41" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 41" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">42</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 42" aria-label="Titolo sito 42" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 42" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">43</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 43" aria-label="Titolo sito 43" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 43" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">44</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 44" aria-label="Titolo sito 44" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 44" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">45</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 45" aria-label="Titolo sito 45" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 45" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">46</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 46" aria-label="Titolo sito 46" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 46" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">47</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 47" aria-label="Titolo sito 47" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 47" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">48</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 48" aria-label="Titolo sito 48" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 48" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">49</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 49" aria-label="Titolo sito 49" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 49" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+    <article class="slot">
+      <div class="slot-number">50</div>
+      <div class="slot-content">
+        <input class="slot-title" type="text" placeholder="Titolo del sito 50" aria-label="Titolo sito 50" readonly>
+        <input class="slot-url" type="url" placeholder="https://esempio.it" aria-label="Link sito 50" readonly>
+      </div>
+      <button class="go" type="button">VAI ↗️</button>
+    </article>
+
+  </section>
+</main>
+
+<footer>⚡ REMAWED10 HUB • I LINK SI APRONO IN UNA NUOVA SCHEDA ⚡</footer>
+
+<script>
+// SFX Audio Synth
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  if (type === 'hover') {
+    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+  } else if (type === 'click') {
+    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.08);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+  }
+}
+
+const search = document.getElementById('search');
+const activeCountDisplay = document.getElementById('activeCountDisplay');
+const activeCounterBtn = document.getElementById('activeCounterBtn');
+
+let isCounterActive = true;
+
+// Calcolo in tempo reale degli slot attivi
+function updateActiveCounter() {
+  if (!isCounterActive) {
+    activeCountDisplay.innerText = "ATTIVI: DISATTIVATO";
+    activeCounterBtn.classList.add('disabled');
+    document.querySelectorAll('.slot').forEach(card => {
+      card.classList.remove('is-active', 'is-empty');
+    });
+    return;
+  }
+
+  activeCounterBtn.classList.remove('disabled');
+  let activeCount = 0;
+
+  document.querySelectorAll('.slot').forEach(card => {
+    const url = card.querySelector('.slot-url').value.trim();
+    if (url && url !== '') {
+      activeCount++;
+      card.classList.add('is-active');
+      card.classList.remove('is-empty');
+    } else {
+      card.classList.add('is-empty');
+      card.classList.remove('is-active');
+    }
+  });
+
+  activeCountDisplay.innerText = `ATTIVI: ${activeCount} / 50`;
+}
+
+// Disattivazione/Attivazione manuale del contatore al click
+activeCounterBtn.addEventListener('click', () => {
+  isCounterActive = !isCounterActive;
+  updateActiveCounter();
+});
+
+// Inizializza contatore
+updateActiveCounter();
+
+// Apertura Link
+function openUrl(card) {
+  const input = card.querySelector('.slot-url');
+  let url = input.value.trim();
+
+  if (!url) {
+    playSound('hover');
+    return alert('⚠️ Inserisci o assegna prima un link a questo slot.');
+  }
+
+  playSound('click');
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// Eventi sui pulsanti
+document.querySelectorAll('.go').forEach(btn => {
+  btn.addEventListener('click', () => openUrl(btn.closest('.slot')));
+  btn.addEventListener('mouseenter', () => playSound('hover'));
+});
+
+// Ricerca Istantanea tra tutti i 50 slot
+search.addEventListener('input', () => {
+  const q = search.value.toLowerCase().trim();
+
+  document.querySelectorAll('.slot').forEach(card => {
+    const title = card.querySelector('.slot-title').value.toLowerCase();
+    const url = card.querySelector('.slot-url').value.toLowerCase();
+    const num = card.querySelector('.slot-number').innerText.toLowerCase();
+
+    if (title.includes(q) || url.includes(q) || num.includes(q)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+});
+
+// Sfondo Animato Cyber Canvas
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+for (let i = 0; i < 45; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.8,
+    vy: (Math.random() - 0.5) * 0.8,
+    size: Math.random() * 2 + 1
+  });
+}
+
+function animateCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00f0ff';
+  ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+
+  particles.forEach((p, index) => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let j = index + 1; j < particles.length; j++) {
+      const p2 = particles[j];
+      const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+    }
+  });
+
+  requestAnimationFrame(animateCanvas);
+}
+animateCanvas();
+</script>
+
 </body>
 </html>
